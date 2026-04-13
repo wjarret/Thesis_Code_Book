@@ -10,9 +10,9 @@ Index_adapters = config["Index_adapters"]
 Cutadapt = config["Cutadapt"]
 seqkit = config["seqkit"]
 
-############################################################
+
 # Discover samples from filesystem
-############################################################
+ 
 
 (samples,) = glob_wildcards("data/samples/{sample}_R1_001.fastq.gz")
 
@@ -28,9 +28,9 @@ OOPS_SAMPLES = [s for s in samples if "OOPS" in s]
 #print(f"OOPS samples: {OOPS_SAMPLES}")
 
 
-############################################################
+ 
 # Final target
-############################################################
+ 
 
 rule all:
     input:
@@ -40,9 +40,9 @@ rule all:
         expand("umi_removed/{sample}_R1_001.fastq.gz", sample=OOPS_SAMPLES),
         expand("umi_removed/{sample}_R2_001.fastq.gz", sample=OOPS_SAMPLES)
 
-############################################################
+ 
 # Copy FASTQ
-############################################################
+ 
 
 rule copy_fastq:
     input:
@@ -58,9 +58,9 @@ rule copy_fastq:
         cp {input.r2} {output.r2}
         """
 
-############################################################
+ 
 # Adapter trimming step 1
-############################################################
+ 
 
 rule cutadapt_step1:
     input:
@@ -90,9 +90,9 @@ rule cutadapt_step1:
           {input.r1} {input.r2} > {log} 2>&1
         """
 
-############################################################
+ 
 # Adapter trimming step 2
-############################################################
+ 
 
 rule cutadapt_step2:
     input:
@@ -122,9 +122,9 @@ rule cutadapt_step2:
             {input.r1} {input.r2} > {log} 2>&1
         """
 
-############################################################
+ 
 # UMI extraction
-############################################################
+ 
 
 rule umi_extraction:
     input:
@@ -158,9 +158,9 @@ rule umi_extraction:
             > {log} 2>&1
         """
 
-############################################################
+ 
 # Organize DMSO samples
-############################################################
+ 
 
 rule organize_DMSO:
     input:
@@ -176,9 +176,9 @@ rule organize_DMSO:
         ln -sf $(realpath {input.r2}) {output.r2}
         """
 
-############################################################
+ 
 # Primer trimming
-############################################################
+ 
 
 rule cutadapt_primer_removal:
     input:
@@ -211,9 +211,9 @@ rule cutadapt_primer_removal:
             {input.r1} {input.r2} > {log} 2>&1
         """
 
-############################################################
+ 
 # BBMerge
-############################################################
+ 
 
 rule BB_Merge:
     input:
@@ -236,9 +236,9 @@ rule BB_Merge:
             merge=false > {log} 2>&1
         """
 
-############################################################
+ 
 # Quality trimming
-############################################################
+ 
 
 rule Quality_trimming_fastp:
     input:
@@ -269,9 +269,9 @@ rule Quality_trimming_fastp:
           --thread {threads} > {log} 2>&1
         """
 
-############################################################
+ 
 # DADA2
-############################################################
+ 
 
 rule dada2:
     input:
@@ -292,9 +292,9 @@ rule dada2:
             --out {output.fa} > {log} 2>&1
         """
 
-############################################################
+ 
 # Primer reinsertion
-############################################################
+ 
 
 rule primer_reinsertion:
     input:
