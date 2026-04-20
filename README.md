@@ -1,4 +1,4 @@
-<img width="590" height="590" alt="image" src="https://github.com/user-attachments/assets/e01c1545-b637-44ed-964e-d07e539ffcfa" />
+<img width="300" height="300" alt="image" src="https://github.com/user-attachments/assets/e01c1545-b637-44ed-964e-d07e539ffcfa" />
 
 # Thesis_Code_Book
 
