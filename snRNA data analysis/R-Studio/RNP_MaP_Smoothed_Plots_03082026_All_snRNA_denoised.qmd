@@ -1,0 +1,240 @@
+---
+title: "Untitled"
+format: html
+editor: visual
+---
+
+## Smoothing Sm Site Data and Plotting
+
+Libraries
+
+```{r setup, include=FALSE}
+knitr::opts_knit$set(root.dir = "C:/Users/wjarret/University of Michigan Dropbox/MED-RNA-Lab/Team Members/Wjarret/Lab Notebook/General Data/RNP-MaP Results/Dada2_denoising_URNA_03082026/RNP_MaP_CSVs")
+
+# knitr::opts_knit$set(root.dir = "/Users/jarrettscomputer/University of Michigan Dropbox/MED-RNA-Lab/Team Members/Wjarret/Lab Notebook/General Data/RNP-MaP Results/Dada2_denoising_URNA_03082026/RNP_MaP_CSVs")
+library(ggplot2)
+library(dplyr)
+library(ggpubr)
+library(scales)
+```
+
+Data
+
+```{r}
+#01/29/2026
+
+U1_DMSO_aq_SDA_int_20260129 <- read.csv('HeLa-U1_DMSO_aq_SDA_int_20260129_ASV1_profile_RESULTS.csv', header = TRUE)
+
+U11_DMSO_aq_SDA_int_20260129 <- read.csv('HeLa-U11_DMSO_aq_SDA_int_20260129_ASV1_profile_RESULTS.csv', header = TRUE)
+
+U12_DMSO_aq_SDA_int_20260129 <- read.csv('HeLa-U12_DMSO_aq_SDA_int_20260129_ASV1_profile_RESULTS.csv', header = TRUE)
+
+U4_1_DMSO_aq_SDA_int_20260129 <- read.csv('HeLa-U4_DMSO_aq_SDA_int_20260129_U4-1_profile_RESULTS.csv', header = TRUE)
+
+U4_2_DMSO_aq_SDA_int_20260129 <- read.csv('HeLa-U4_DMSO_aq_SDA_int_20260129_U4-2_profile_RESULTS.csv', header = TRUE)
+
+U4_atac_DMSO_aq_SDA_int_20260129 <- read.csv('HeLa-U4atac_DMSO_aq_SDA_int_20260129_ASV1_profile_RESULTS.csv', header = TRUE)
+
+U5A_DMSO_aq_SDA_int_20260129 <- read.csv('HeLa-U5_DMSO_aq_SDA_int_20260129_U5A_profile_RESULTS.csv', header = TRUE)
+
+U5B_DMSO_aq_SDA_int_20260129 <- read.csv('HeLa-U5_DMSO_aq_SDA_int_20260129_U5B_profile_RESULTS.csv', header = TRUE)
+
+#07/07/2025
+
+U1_DMSO_aq_SDA_int_20250707 <- read.csv('HeLa-U1_DMSO_aq_SDA_int_20250707_ASV2_profile_RESULTS.csv', header = TRUE)
+
+U2_DMSO_aq_SDA_int_20250707 <- read.csv('HeLa-U2_DMSO_aq_SDA_int_20250707_ASV1_profile_RESULTS.csv')
+
+U11_DMSO_aq_SDA_int_20250707 <- read.csv('HeLa-U11_DMSO_aq_SDA_int_20250707_ASV1_profile_RESULTS.csv', header = TRUE)
+
+U12_DMSO_aq_SDA_int_20250707 <- read.csv('HeLa-U12_DMSO_aq_SDA_int_20250707_ASV1_profile_RESULTS.csv', header = TRUE)
+
+#05/05/2025
+U1_DMSO_aq_SDA_int_20250525 <- read.csv('HeLa-U1_DMSO_aq_SDA_int_20250525_ASV1_profile_RESULTS.csv', header = TRUE)
+
+#11/09/24
+U1_DMSO_aq_SDA_int_11092024 <- read.csv('HeLa-U1_DMSO_aq_SDA_int_11092024_ASV1_profile_RESULTS.csv', header = TRUE)
+
+U2_DMSO_aq_SDA_int_11092024 <- read.csv('HeLa-U2_DMSO_aq_SDA_int_110924_ASV1_profile_RESULTS.csv')
+
+U11_DMSO_aq_SDA_int_11092024 <- read.csv('HeLa-U11_DMSO_aq_SDA_int_110924_ASV1_profile_RESULTS.csv', header = TRUE)
+
+U12_DMSO_aq_SDA_int_11092024 <- read.csv('HeLa-U12_DMSO_aq_SDA_int_110924_ASV1_profile_RESULTS.csv', header = TRUE)
+```
+
+Filtering Data
+
+```{r}
+# #In slice, we can set the binding region of interst
+# 
+# #01/29/2026
+# Filtered_U1_20260129 <- U1_DMSO_aq_SDA_int_20260129  %>% slice(114:138)
+# 
+# Filtered_U11_20260129 <- U11_DMSO_aq_SDA_int_20260129 %>% slice(78:102)
+# 
+# Filtered_U12_20260129 <- U12_DMSO_aq_SDA_int_20260129 %>% slice(64:88)
+# 
+# Filtered_U4_1_20260129 <- U4_1_DMSO_aq_SDA_int_20260129 %>% slice(110:134)
+# 
+# Filtered_U4_2_20260129 <- U4_2_DMSO_aq_SDA_int_20260129 %>% slice(110:134)
+# 
+# Filtered_U4_atac_20260129 <- U4_atac_DMSO_aq_SDA_int_20260129 %>% slice(97:121)
+# 
+# Filtered_U5A_20260129 <- U5A_DMSO_aq_SDA_int_20260129 %>% slice(80:104)
+# 
+# Filtered_U5B_20260129 <- U5B_DMSO_aq_SDA_int_20260129 %>% slice(80:104)
+# 
+# #07/07/2025
+# Filtered_U1_20250707 <- U1_DMSO_aq_SDA_int_20250707 %>% slice(118:142)
+# 
+# Filtered_U2_20250707 <- U2_DMSO_aq_SDA_int_20250707 %>% slice(90:114)
+# 
+# Filtered_U11_20250707 <- U11_DMSO_aq_SDA_int_20250707 %>% slice(80:104)
+# 
+# Filtered_U12_20250707 <- U12_DMSO_aq_SDA_int_20250707 %>% slice(66:90)
+# 
+# #11/09/24
+# Filtered_U1_11092024 <- U1_DMSO_aq_SDA_int_11092024 %>% slice(118:142)
+# 
+# Filtered_U2_11092024 <- U2_DMSO_aq_SDA_int_11092024 %>% slice(90:114)
+# 
+# Filtered_U11_11092024 <- U11_DMSO_aq_SDA_int_11092024 %>% slice(80:104)
+# 
+# Filtered_U12_11092024 <- U12_DMSO_aq_SDA_int_11092024 %>% slice(66:90)
+# 
+# #05/05/2025
+# Filtered_U1_20250525 <- U1_DMSO_aq_SDA_int_20250525 %>% slice(118:142)
+
+```
+
+```{r}
+#01/29/2026
+Filtered_U1_20260129 <- U1_DMSO_aq_SDA_int_20260129  %>% slice(83:106)
+Filtered_U11_20260129 <- U11_DMSO_aq_SDA_int_20260129 %>% slice(41:64)
+Filtered_U12_20260129 <- U12_DMSO_aq_SDA_int_20260129 %>% slice(119:142)
+Filtered_U4_1_20260129 <- U4_1_DMSO_aq_SDA_int_20260129 %>% slice(57:80)
+Filtered_U4_2_20260129 <- U4_2_DMSO_aq_SDA_int_20260129 %>% slice(22:45)
+Filtered_U4_atac_20260129 <- U4_atac_DMSO_aq_SDA_int_20260129 %>% slice(104:127)
+Filtered_U5A_20260129 <- U5A_DMSO_aq_SDA_int_20260129 %>% slice(68:91)
+Filtered_U5B_20260129 <- U5B_DMSO_aq_SDA_int_20260129 %>% slice(35:58)
+#07/07/2025
+Filtered_U1_20250707 <- U1_DMSO_aq_SDA_int_20250707 %>% slice(93:116)
+Filtered_U2_20250707 <- U2_DMSO_aq_SDA_int_20250707 %>% slice(112:135)
+Filtered_U11_20250707 <- U11_DMSO_aq_SDA_int_20250707 %>% slice(47:70)
+Filtered_U12_20250707 <- U12_DMSO_aq_SDA_int_20250707 %>% slice(76:99)
+#11/09/24
+Filtered_U1_11092024 <- U1_DMSO_aq_SDA_int_11092024 %>% slice(128:151)
+Filtered_U2_11092024 <- U2_DMSO_aq_SDA_int_11092024 %>% slice(19:42)
+Filtered_U11_11092024 <- U11_DMSO_aq_SDA_int_11092024 %>% slice(61:84)
+Filtered_U12_11092024 <- U12_DMSO_aq_SDA_int_11092024 %>% slice(88:111)
+#05/05/2025
+Filtered_U1_20250525 <- U1_DMSO_aq_SDA_int_20250525 %>% slice(44:67)
+```
+
+Smoothing the butter
+
+```{r}
+#REMEMBER THIS IS FOR A WINDOW OF 3
+moving_average_with_window_Three<- function(x) {
+  butter <- rep(NA, length(x))
+  for (i in 2:(length(x) - 1)) {
+    butter[i] <- mean(x[(i - 1):(i + 1)])
+  }
+  return(butter)
+}
+#I got this to work when I got the function to fill the first and last positions with NA's due to the 3, window size. Overall, this function provides the moving average to smooth the data.
+
+
+#IMPOOTANT!!!!!!!!!!!!! This can be used for defining the names within the list. Storing your functions in a list allows for ease of function use. THe function applies over the list rather than doing it individually. That's kind of the purpose of doing all this in the first place lol. 
+data_list <- list(
+  # 01/29/2026
+  U1_20260129     = Filtered_U1_20260129,
+  U11_20260129    = Filtered_U11_20260129,
+  U12_20260129    = Filtered_U12_20260129,
+  U4_1_20260129   = Filtered_U4_1_20260129,
+  U4_2_20260129   = Filtered_U4_2_20260129,
+  U4atac_20260129 = Filtered_U4_atac_20260129,
+  U5A_20260129    = Filtered_U5A_20260129,
+  U5B_20260129    = Filtered_U5B_20260129,
+
+  # 07/07/2025
+  U1_20250707     = Filtered_U1_20250707,
+  U2_20250707     = Filtered_U2_20250707,
+  U11_20250707    = Filtered_U11_20250707,
+  U12_20250707    = Filtered_U12_20250707,
+
+  # 11/09/2024
+  U1_11092024     = Filtered_U1_11092024,
+  U2_11092024     = Filtered_U2_11092024,
+  U11_11092024    = Filtered_U11_11092024,
+  U12_11092024    = Filtered_U12_11092024,
+
+  # 05/25/2025
+  U1_20250525     = Filtered_U1_20250525
+)
+
+#Applying the function to the data list we just made
+Moving_average <- mapply(
+  function(df, your_data) {
+     print(paste('Function has passed:', your_data, 'into new list called Moving_average'))
+     df %>% mutate(Moving_average = moving_average_with_window_Three(Norm_Score))
+  },
+  df = data_list,
+  your_data = names(data_list), #allows me to get the nams of the cprresponding list
+  SIMPLIFY = FALSE
+)
+
+```
+
+Plotting the bar graphs
+
+```{# {r}
+# for (your_data in names(Moving_average)) {
+#   df <- Moving_average[[your_data]]
+#   
+#   #df_line <- df[!is.na(df$Moving_average), ]
+#   
+#   In_ground_pool <- ggplot(df, aes(x = Nucleotide, y = Norm_Score)) +
+#     geom_bar(stat = "identity", fill = "darkblue") +
+#     geom_line(aes(y = Moving_average), color = "yellow", linewidth = 0.5) +
+#     #scale_fill_gradient(low = "lightblue", high = "darkblue") +
+#     # scale_x_continuous(breaks = df$Nucleotide, labels = df$Sequence) + 
+#     scale_y_continuous(limits = c(0, 3.5)) + 
+#     #coord_cartesian(ylim = c(0, 3.5)) +
+#     # labs(title = your_data, x = "Nucleotide", y = "Norm_score") +
+#     theme_minimal()
+#   print(In_ground_pool)
+#   ggsave(
+#     filename = paste0(your_data, ".png"),
+#     plot = In_ground_pool,
+#     dpi = 300,
+#     path = 'C:/Users/wjarret/University of Michigan Dropbox/MED-RNA-Lab/Team Members/Wjarret/Lab Notebook/General Data/RNP-MaP Results/Dada2_denoising_URNA_03082026/Chases_test_Sm'
+#    )
+# }
+# 
+# 
+
+```
+
+```{r}
+for (your_data in names(Moving_average)) {
+  df <- Moving_average[[your_data]]
+  
+  In_ground_pool <- ggplot(df, aes(x = Nucleotide, y = Norm_Score)) +
+    geom_bar(stat = "identity", fill = "darkblue") +
+    geom_line(aes(y = Moving_average), color = "yellow", linewidth = 0.5) +
+    scale_y_continuous(limits = c(0, 3.5)) + 
+    theme_minimal() +
+    theme(axis.text.x = element_blank(),
+          axis.ticks.x = element_blank(),
+          axis.title.x = element_blank())
+  
+  print(In_ground_pool)
+  ggsave(
+    filename = paste0(your_data, ".svg"),
+    plot = In_ground_pool,
+    dpi = 300,
+    path = 'C:/Users/wjarret/University of Michigan Dropbox/MED-RNA-Lab/Team Members/Wjarret/Lab Notebook/General Data/RNP-MaP Results/Dada2_denoising_URNA_03082026/Krillin'
+  )
+}
+```

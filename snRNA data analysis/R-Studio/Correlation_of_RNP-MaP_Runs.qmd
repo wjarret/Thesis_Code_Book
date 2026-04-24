@@ -1,0 +1,404 @@
+---
+title: "Correlation of RNP-MaP Runs"
+format: html
+editor: visual
+---
+
+## Correlation of RNP-MaP Runs
+
+We are comparing the SHAPE outputs of the mutation rate to untreated rates and looking at the correlation between the two replicates.
+
+Loading in Libraries
+
+```{r setup, include=FALSE}
+knitr::opts_knit$set(root.dir = "/Users/jarrettscomputer/Desktop/RNP_MaP_Data/Shape_MaP_Output_profiles")
+library(ggplot2)
+library(dplyr)
+```
+
+Data
+
+```{r}
+#U1
+U1_Rep1_aq_int <- read.table('U1_aq_int_Hs_RNU1_1_profile.txt', header = TRUE)
+U1_Rep2_aq_int <- read.table('U1_aq_int_20250707_Hs_RNU1_1_profile.txt', header = TRUE)
+U1_Rep1_DMSO_int<- read.table('U1_DMSO_int_Hs_RNU1_1_profile.txt', header = TRUE)
+U1_Rep2_DMSO_int <- read.table('U1_DMSO_int_20250707_Hs_RNU1_1_profile.txt', header = TRUE)
+#U2
+U2_Rep2_aq_int <- read.table('U2_aq_int_20250707_Hs_RNU2_1_profile.txt', header = TRUE)
+U2_Rep1_aq_int<- read.table('U2_aq_int_Hs_RNU2_1_profile.txt', header = TRUE)
+U2_Rep2_DMSO_int<- read.table('U2_DMSO_int_20250707_Hs_RNU2_1_profile.txt', header = TRUE)
+U2_Rep1_DMSO_int<- read.table('U2_DMSO_int_Hs_RNU2_1_profile.txt', header = TRUE)
+#U11
+U11_Rep2_aq_int<- read.table('U11_aq_int_20250707_Hs_RNU11_profile.txt', header = TRUE)
+U11_Rep1_aq_int<- read.table('U11_aq_int_Hs_RNU11_profile.txt', header = TRUE)
+U11_Rep2_DMSO_int<- read.table('U11_DMSO_int_20250707_Hs_RNU11_profile.txt', header = TRUE)
+U11_Rep1_DMSO_int<- read.table('U11_DMSO_int_Hs_RNU11_profile.txt', header = TRUE)
+#U12
+U12_Rep1_aq_int<- read.table('U12_aq_int_20250707_Hs_RNU12_profile.txt', header = TRUE)
+U12_Rep2_aq_int<- read.table('U12_aq_int_Hs_RNU12_profile.txt', header = TRUE)
+U12_Rep1_DMSO_int<- read.table('U12_DMSO_int_20250707_Hs_RNU12_profile.txt', header = TRUE)
+U12_Rep2_DMSO_int<- read.table('U12_DMSO_int_Hs_RNU12_profile.txt', header = TRUE)
+
+```
+
+Filtering Data & Defining Columns
+
+```{r}
+#U1_aq_int
+U1_Rep1_subset <- U1_Rep1[, c("Modified_rate", "Untreated_rate")]
+U1_Rep2_subset <- U1_Rep2[, c("Modified_rate", "Untreated_rate")]
+
+U1_Rep1_subset <- U1_Rep1_subset %>% mutate(Ratio = Modified_rate / Untreated_rate) %>% mutate(Log_10_Ratio = log10(Modified_rate / Untreated_rate)) %>%
+  mutate(across(everything(), ~ ifelse(. == 0, NaN, .)))
+
+U1_Rep2_subset <- U1_Rep2_subset %>% mutate(Ratio = Modified_rate / Untreated_rate) %>% mutate(Log_10_Ratio = log10(Modified_rate / Untreated_rate)) %>%
+  mutate(across(everything(), ~ ifelse(. == 0, NaN, .)))
+
+U1_Rep2_subset <- U1_Rep2_subset %>%
+  mutate(across(c(Ratio, Log_10_Ratio), ~ ifelse(is.infinite(.), NA, .)))
+
+Combined_ratios_U1 <- data.frame(
+  Rep1 = U1_Rep1_subset$Log_10_Ratio,
+  Rep2 = U1_Rep2_subset$Log_10_Ratio
+)
+
+Cleaned_Combined_ratios_U1 <- na.omit(Combined_ratios_U1)
+
+#U1_DMSO_int
+U1_Rep1_subset <- U1_Rep1[, c("Modified_rate", "Untreated_rate")]
+U1_Rep2_subset <- U1_Rep2[, c("Modified_rate", "Untreated_rate")]
+
+U1_Rep1_subset <- U1_Rep1_subset %>% mutate(Ratio = Modified_rate / Untreated_rate) %>% mutate(Log_10_Ratio = log10(Modified_rate / Untreated_rate)) %>%
+  mutate(across(everything(), ~ ifelse(. == 0, NaN, .)))
+
+U1_Rep2_subset <- U1_Rep2_subset %>% mutate(Ratio = Modified_rate / Untreated_rate) %>% mutate(Log_10_Ratio = log10(Modified_rate / Untreated_rate)) %>%
+  mutate(across(everything(), ~ ifelse(. == 0, NaN, .)))
+
+U1_Rep2_subset <- U1_Rep2_subset %>%
+  mutate(across(c(Ratio, Log_10_Ratio), ~ ifelse(is.infinite(.), NA, .)))
+
+Combined_ratios_U1 <- data.frame(
+  Rep1 = U1_Rep1_subset$Log_10_Ratio,
+  Rep2 = U1_Rep2_subset$Log_10_Ratio
+)
+
+Cleaned_Combined_ratios_U1 <- na.omit(Combined_ratios_U1)
+
+#U2_aq_int
+U1_Rep1_subset <- U1_Rep1[, c("Modified_rate", "Untreated_rate")]
+U1_Rep2_subset <- U1_Rep2[, c("Modified_rate", "Untreated_rate")]
+
+U1_Rep1_subset <- U1_Rep1_subset %>% mutate(Ratio = Modified_rate / Untreated_rate) %>% mutate(Log_10_Ratio = log10(Modified_rate / Untreated_rate)) %>%
+  mutate(across(everything(), ~ ifelse(. == 0, NaN, .)))
+
+U1_Rep2_subset <- U1_Rep2_subset %>% mutate(Ratio = Modified_rate / Untreated_rate) %>% mutate(Log_10_Ratio = log10(Modified_rate / Untreated_rate)) %>%
+  mutate(across(everything(), ~ ifelse(. == 0, NaN, .)))
+
+U1_Rep2_subset <- U1_Rep2_subset %>%
+  mutate(across(c(Ratio, Log_10_Ratio), ~ ifelse(is.infinite(.), NA, .)))
+
+Combined_ratios_U1 <- data.frame(
+  Rep1 = U1_Rep1_subset$Log_10_Ratio,
+  Rep2 = U1_Rep2_subset$Log_10_Ratio
+)
+
+Cleaned_Combined_ratios_U1 <- na.omit(Combined_ratios_U1)
+#U2_DMSO_int
+U1_Rep1_subset <- U1_Rep1[, c("Modified_rate", "Untreated_rate")]
+U1_Rep2_subset <- U1_Rep2[, c("Modified_rate", "Untreated_rate")]
+
+U1_Rep1_subset <- U1_Rep1_subset %>% mutate(Ratio = Modified_rate / Untreated_rate) %>% mutate(Log_10_Ratio = log10(Modified_rate / Untreated_rate)) %>%
+  mutate(across(everything(), ~ ifelse(. == 0, NaN, .)))
+
+U1_Rep2_subset <- U1_Rep2_subset %>% mutate(Ratio = Modified_rate / Untreated_rate) %>% mutate(Log_10_Ratio = log10(Modified_rate / Untreated_rate)) %>%
+  mutate(across(everything(), ~ ifelse(. == 0, NaN, .)))
+
+U1_Rep2_subset <- U1_Rep2_subset %>%
+  mutate(across(c(Ratio, Log_10_Ratio), ~ ifelse(is.infinite(.), NA, .)))
+
+Combined_ratios_U1 <- data.frame(
+  Rep1 = U1_Rep1_subset$Log_10_Ratio,
+  Rep2 = U1_Rep2_subset$Log_10_Ratio
+)
+
+Cleaned_Combined_ratios_U1 <- na.omit(Combined_ratios_U1)
+#U11_aq_int
+U1_Rep1_subset <- U1_Rep1[, c("Modified_rate", "Untreated_rate")]
+U1_Rep2_subset <- U1_Rep2[, c("Modified_rate", "Untreated_rate")]
+
+U1_Rep1_subset <- U1_Rep1_subset %>% mutate(Ratio = Modified_rate / Untreated_rate) %>% mutate(Log_10_Ratio = log10(Modified_rate / Untreated_rate)) %>%
+  mutate(across(everything(), ~ ifelse(. == 0, NaN, .)))
+
+U1_Rep2_subset <- U1_Rep2_subset %>% mutate(Ratio = Modified_rate / Untreated_rate) %>% mutate(Log_10_Ratio = log10(Modified_rate / Untreated_rate)) %>%
+  mutate(across(everything(), ~ ifelse(. == 0, NaN, .)))
+
+U1_Rep2_subset <- U1_Rep2_subset %>%
+  mutate(across(c(Ratio, Log_10_Ratio), ~ ifelse(is.infinite(.), NA, .)))
+
+Combined_ratios_U1 <- data.frame(
+  Rep1 = U1_Rep1_subset$Log_10_Ratio,
+  Rep2 = U1_Rep2_subset$Log_10_Ratio
+)
+
+Cleaned_Combined_ratios_U1 <- na.omit(Combined_ratios_U1)
+#U11_DMSO_int
+U1_Rep1_subset <- U1_Rep1[, c("Modified_rate", "Untreated_rate")]
+U1_Rep2_subset <- U1_Rep2[, c("Modified_rate", "Untreated_rate")]
+
+U1_Rep1_subset <- U1_Rep1_subset %>% mutate(Ratio = Modified_rate / Untreated_rate) %>% mutate(Log_10_Ratio = log10(Modified_rate / Untreated_rate)) %>%
+  mutate(across(everything(), ~ ifelse(. == 0, NaN, .)))
+
+U1_Rep2_subset <- U1_Rep2_subset %>% mutate(Ratio = Modified_rate / Untreated_rate) %>% mutate(Log_10_Ratio = log10(Modified_rate / Untreated_rate)) %>%
+  mutate(across(everything(), ~ ifelse(. == 0, NaN, .)))
+
+U1_Rep2_subset <- U1_Rep2_subset %>%
+  mutate(across(c(Ratio, Log_10_Ratio), ~ ifelse(is.infinite(.), NA, .)))
+
+Combined_ratios_U1 <- data.frame(
+  Rep1 = U1_Rep1_subset$Log_10_Ratio,
+  Rep2 = U1_Rep2_subset$Log_10_Ratio
+)
+
+Cleaned_Combined_ratios_U1 <- na.omit(Combined_ratios_U1)
+#U12_aq_int
+U1_Rep1_subset <- U1_Rep1[, c("Modified_rate", "Untreated_rate")]
+U1_Rep2_subset <- U1_Rep2[, c("Modified_rate", "Untreated_rate")]
+
+U1_Rep1_subset <- U1_Rep1_subset %>% mutate(Ratio = Modified_rate / Untreated_rate) %>% mutate(Log_10_Ratio = log10(Modified_rate / Untreated_rate)) %>%
+  mutate(across(everything(), ~ ifelse(. == 0, NaN, .)))
+
+U1_Rep2_subset <- U1_Rep2_subset %>% mutate(Ratio = Modified_rate / Untreated_rate) %>% mutate(Log_10_Ratio = log10(Modified_rate / Untreated_rate)) %>%
+  mutate(across(everything(), ~ ifelse(. == 0, NaN, .)))
+
+U1_Rep2_subset <- U1_Rep2_subset %>%
+  mutate(across(c(Ratio, Log_10_Ratio), ~ ifelse(is.infinite(.), NA, .)))
+
+Combined_ratios_U1 <- data.frame(
+  Rep1 = U1_Rep1_subset$Log_10_Ratio,
+  Rep2 = U1_Rep2_subset$Log_10_Ratio
+)
+
+Cleaned_Combined_ratios_U1 <- na.omit(Combined_ratios_U1)
+#U12_DMSO_int
+U1_Rep1_subset <- U1_Rep1[, c("Modified_rate", "Untreated_rate")]
+U1_Rep2_subset <- U1_Rep2[, c("Modified_rate", "Untreated_rate")]
+
+U1_Rep1_subset <- U1_Rep1_subset %>% mutate(Ratio = Modified_rate / Untreated_rate) %>% mutate(Log_10_Ratio = log10(Modified_rate / Untreated_rate)) %>%
+  mutate(across(everything(), ~ ifelse(. == 0, NaN, .)))
+
+U1_Rep2_subset <- U1_Rep2_subset %>% mutate(Ratio = Modified_rate / Untreated_rate) %>% mutate(Log_10_Ratio = log10(Modified_rate / Untreated_rate)) %>%
+  mutate(across(everything(), ~ ifelse(. == 0, NaN, .)))
+
+U1_Rep2_subset <- U1_Rep2_subset %>%
+  mutate(across(c(Ratio, Log_10_Ratio), ~ ifelse(is.infinite(.), NA, .)))
+
+Combined_ratios_U1 <- data.frame(
+  Rep1 = U1_Rep1_subset$Log_10_Ratio,
+  Rep2 = U1_Rep2_subset$Log_10_Ratio
+)
+
+Cleaned_Combined_ratios_U1 <- na.omit(Combined_ratios_U1)
+```
+
+```{r}
+process_replicates <- function(rep1, rep2) {
+  rep1_subset <- rep1[, c("Modified_rate", "Untreated_rate")] %>%
+    mutate(Ratio = Modified_rate / Untreated_rate,
+           Log_10_Ratio = log10(Ratio)) %>%
+    mutate(across(everything(), ~ ifelse(. == 0, NaN, .)))%>%
+    mutate(across(c(Ratio, Log_10_Ratio), ~ ifelse(is.infinite(.), NA, .)))
+
+  rep2_subset <- rep2[, c("Modified_rate", "Untreated_rate")] %>%
+    mutate(Ratio = Modified_rate / Untreated_rate,
+           Log_10_Ratio = log10(Ratio)) %>%
+    mutate(across(everything(), ~ ifelse(. == 0, NaN, .))) %>%
+    mutate(across(c(Ratio, Log_10_Ratio), ~ ifelse(is.infinite(.), NA, .)))
+  
+  combined <- data.frame(
+    Rep1 = rep1_subset$Log_10_Ratio,
+    Rep2 = rep2_subset$Log_10_Ratio
+  )
+
+  cleaned <- na.omit(combined)
+  return(cleaned)
+}
+
+#Change sample names here!!!!!!!!!
+samples <- c("U1", "U2", "U11", "U12")
+conditions <- c("aq", "DMSO")
+
+results <- list()
+
+for (sample in samples) {
+  for (cond in conditions) {
+    rep1_name <- paste0(sample, "_Rep1_", cond, "_int")
+    rep2_name <- paste0(sample, "_Rep2_", cond, "_int")
+
+    rep1 <- get(rep1_name)
+    rep2 <- get(rep2_name)
+
+    cleaned_data <- process_replicates(rep1, rep2)
+
+    key <- paste0(sample, "_", cond)
+    results[[key]] <- cleaned_data
+  }
+}
+
+
+
+```
+
+Testing correlation and Analyzing the Linear Relationship (further from zero the stronger the relationship)
+
+```{r}
+#U1
+shapiro.test(Combined_ratios_U1$Rep1)
+shapiro.test(Combined_ratios_U1$Rep2)
+cor.test(Combined_ratios_U1$Rep1,Combined_ratios_U1$Rep2 , method = "pearson")
+cov(x = Cleaned_Combined_ratios_U1$Rep1, y = Cleaned_Combined_ratios_U1$Rep2)
+
+#U2
+shapiro.test(Combined_ratios_U1$Rep1)
+shapiro.test(Combined_ratios_U1$Rep2)
+cor.test(Combined_ratios_U1$Rep1,Combined_ratios_U1$Rep2 , method = "pearson")
+cov(x = Cleaned_Combined_ratios_U1$Rep1, y = Cleaned_Combined_ratios_U1$Rep2)
+
+#U11
+shapiro.test(Combined_ratios_U1$Rep1)
+shapiro.test(Combined_ratios_U1$Rep2)
+cor.test(Combined_ratios_U1$Rep1,Combined_ratios_U1$Rep2 , method = "pearson")
+cov(x = Cleaned_Combined_ratios_U1$Rep1, y = Cleaned_Combined_ratios_U1$Rep2)
+
+#U12
+shapiro.test(Combined_ratios_U1$Rep1)
+shapiro.test(Combined_ratios_U1$Rep2)
+cor.test(Combined_ratios_U1$Rep1,Combined_ratios_U1$Rep2 , method = "pearson")
+cov(x = Cleaned_Combined_ratios_U1$Rep1, y = Cleaned_Combined_ratios_U1$Rep2)
+```
+
+Spearman Test
+
+```{r}
+run_all_tests <- function(df, sample_name) {
+
+  spearman_result <- cor.test(df$Rep1, df$Rep2, method = "spearman")
+  spearman_rho <- spearman_result$estimate
+  
+  list(
+    Shapiro_Rep1_p = shapiro.test(df$Rep1)$p.value,
+    Shapiro_Rep2_p = shapiro.test(df$Rep2)$p.value,
+    spearman_value = spearman_rho,
+    Covariance = cov(df$Rep1, df$Rep2)
+  )
+}
+
+test_results_spearman <- lapply(results, run_all_tests)
+
+test_summary_spearman  <- do.call(rbind, test_results_spearman)
+test_summary_spearman  <- as.data.frame(test_summary_spearman)
+test_summary_spearman $Sample <- rownames(test_summary_spearman)
+rownames(test_summary_spearman ) <- NULL
+#print(test_summary)
+
+
+```
+
+Pearson Test
+
+```{r}
+run_all_tests <- function(df, sample_name) {
+  qqnorm(df$Rep1, main = paste("Q-Q Plot for", sample_name, "Rep1"))
+  qqline(df$Rep1, col = "green")
+
+  qqnorm(df$Rep2, main = paste("Q-Q Plot for", sample_name, "Rep2"))
+  qqline(df$Rep2, col = "blue")
+
+  pearson_result <- cor.test(df$Rep1, df$Rep2, method = "pearson")
+  pearson_r <- pearson_result$estimate
+
+  list(
+    Shapiro_Rep1_p = shapiro.test(df$Rep1)$p.value,
+    Shapiro_Rep2_p = shapiro.test(df$Rep2)$p.value,
+    pearson_value = pearson_r,
+    R_Squared_Value = pearson_r^2,
+    Covariance = cov(df$Rep1, df$Rep2)
+  )
+}
+
+sample_names <- names(results)
+test_results_pearson <- mapply(run_all_tests, results, sample_names, SIMPLIFY = FALSE)
+test_summary_pearson <- do.call(rbind, test_results_pearson)
+test_summary_pearson <- as.data.frame(test_summary_pearson)
+test_summary_pearson$Sample <- sample_names
+#print(test_summary)
+```
+
+## Observing the correlation plots of mod_rates (mod/unt_rates)
+
+Super_plot_non_linear
+
+```{r}
+for (name in names(results)) {
+  df <- results[[name]]
+
+  Above_ground_pool <- ggplot(df, aes(x = Rep1, y = Rep2)) +
+    geom_point() +
+    geom_smooth(method = "loess", se = FALSE, color = "blue") +
+    labs(title = name, x = "Rep_1 (Log10 Ratio)", y = "Rep_2 (Log10 Ratio)") +
+    theme_minimal()
+
+  print(Above_ground_pool)
+}
+```
+
+Super_Plot_Linear
+
+```{r}
+
+for (name in names(results)) {
+  df <- results[[name]]
+
+  Above_ground_pool <- ggplot(df, aes(x = Rep1, y = Rep2)) +
+    geom_point() +
+    geom_smooth(method = "lm", se = FALSE, color = "blue") +
+    labs(title = name, x = "Rep_1 (Log10 Ratio)", y = "Rep_2 (Log10 Ratio)") +
+    theme_minimal()
+
+  print(Above_ground_pool)
+}
+```
+
+U1
+
+```{r}
+ggplot(Cleaned_Combined_ratios_U1, aes(x = Cleaned_Combined_ratios_U1$Rep1, y =Cleaned_Combined_ratios_U1$Rep2)) + geom_point() + geom_smooth(method = "lm", se = FALSE, color = "blue") 
+```
+
+U2
+
+```{r}
+ggplot(Cleaned_Combined_ratios_U1, aes(x = Cleaned_Combined_ratios_U1$Rep1, y =Cleaned_Combined_ratios_U1$Rep2)) + geom_point() + geom_smooth(method = "lm", se = FALSE, color = "blue") 
+```
+
+U11
+
+```{r}
+ggplot(Cleaned_Combined_ratios_U1, aes(x = Cleaned_Combined_ratios_U1$Rep1, y =Cleaned_Combined_ratios_U1$Rep2)) + geom_point() + geom_smooth(method = "lm", se = FALSE, color = "blue") 
+```
+
+U12
+
+```{r}
+ggplot(Cleaned_Combined_ratios_U1, aes(x = Cleaned_Combined_ratios_U1$Rep1, y =Cleaned_Combined_ratios_U1$Rep2)) + geom_point() + geom_smooth(method = "lm", se = FALSE, color = "blue") 
+```
+
+Answer: Modfied rate is looking similar from both samples as indicated by the examples
+
+What are the features of the site that makes it a good SM Binder
+
+K_mean clustering
+
+Dynamic Time Warping??
+
+We know what a protein binding site on a rna looks like, but we know that the signal will not change even if there is an insert. He said never mind, back to this later.
