@@ -1,5 +1,5 @@
 ---
-title: "Untitled"
+title: "snRNA_nucleotide_reactivity_comparison"
 format: html
 editor: visual
 ---
@@ -273,7 +273,7 @@ nucleotide_summary <- comparison_df %>%
   )
 ```
 
-Do perform the pairwise comparison data, I chose a Kruskal-Wallis test with a Dunn's multiple comparisons test. The data for each nucleotide was shown to be non-normal ( no sample passed the shapiro-wilks test) leading to the performance of a non-parametric test. The compare samples with difference in variation and are non-normal, the Kruskal-wallis test fits best. The test works by ranking all values from low to high, not paying attention to groups each value belongs to, and then takes the rank sum per group. Discrepancies between each rank sum is take to provide the (H)-statistic. The larger the (H)-statistic, the larger the discrepancies. A P-value is then calculated to determine if their is a difference due to random sampling, with a small p-value concluding that populations have different distributions. If the p-value proves to be small, a post-hoc Dunn's test is performed. This test compares the differences in the sum of ranks between 2 columns with the expected average difference.
+To perform the pairwise comparison data, I chose a Kruskal-Wallis test with a posthoc Dunn's multiple comparisons test. The data for each sample was shown to significantly deviate from a normal distribution (no sample passed the shapiro-wilks test) leading to the requirement of a non-parametric test. To perform variation analysis of these samples, I chose a Kruskal-wallis test which assumes the data deviates from a normal distribution (but has similar distibutions), and is continuous. The test works by ranking all values from low to high, not paying attention to the groups each value belongs to, and then takes the rank sum per group. Discrepancies between each rank sum is taken to provide the (H)-statistic. The larger the (H)-statistic, the larger the discrepancies. A P-value is then calculated to determine if their is a difference due to random sampling, with a small p-value concluding that populations have different distributions. If the p-value proves to be small, a post-hoc Dunn's test is performed. This test compares the differences in the sum of ranks between 2 columns with the expected average difference.
 
 ![](images/clipboard-2311344833.png){width="464"}
 
@@ -286,7 +286,7 @@ comparison_df %>%
     n = n()
   )
 
-#Data was not normal so lets use kruskal-wallis
+#Data was deviates from a normal distribution so lets use kruskal-wallis
 kruskal.test(
   x = comparison_df$Enrichment,
   g = comparison_df$Nucleotide,
